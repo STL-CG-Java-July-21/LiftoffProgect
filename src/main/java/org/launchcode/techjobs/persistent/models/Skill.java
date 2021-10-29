@@ -31,5 +31,4 @@ public class Skill extends AbstractEntity {
         this.jobs = jobs;
     }
 
-
 }
