@@ -43,7 +43,7 @@ public class HomeController {
         model.addAttribute("title", "Add Job");
         model.addAttribute(new Job());
         model.addAttribute("employers", employerRepository.findAll());
-        model.addAttribute("skills", employerRepository.findAll());
+        model.addAttribute("skills", skillRepository.findAll());
 
         return "add";
     }
@@ -53,22 +53,26 @@ public class HomeController {
                                        Errors errors, Model model, @RequestParam int employerId,
                                         @RequestParam List<Integer> skills) {
 
+
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
             return "add";
         }
         Employer optEmployer = employerRepository.findById(employerId).orElse(new Employer());
-        newJob.setEmployer(optEmployer);
-
         List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
+
+        newJob.setEmployer(optEmployer);
         newJob.setSkills(skillObjs);
         jobRepository.save(new Job());
 
-        return "redirect:";
+        return newJob.getName();
     }
 
     @GetMapping("view/{jobId}")
     public String displayViewJob(Model model, @PathVariable int jobId) {
+
+        Job optJob = jobRepository.findById(jobId).orElse(new Job());
+        model.addAttribute("job", optJob);
 
         return "view";
     }
